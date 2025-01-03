@@ -49,4 +49,9 @@ const streams = {
     ]
 };
 
-module
+module.exports = {
+    movies,
+    series,
+    streams,
+    all: [...movies, ...series]
+};
