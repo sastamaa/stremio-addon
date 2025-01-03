@@ -29,10 +29,10 @@ app.use((req, res, next) => {
 builder.defineCatalogHandler(({ type, id }) => {
     console.log(`Catalog request for type: ${type}, id: ${id}`);
     if (type === 'movie' && id === 'movies') {
-        return Promise.resolve({ metas: data.movies });
+        return Promise.resolve({ metas: movies });
     }
     if (type === 'series' && id === 'series') {
-        return Promise.resolve({ metas: data.series });
+        return Promise.resolve({ metas: series });
     }
     return Promise.resolve({ metas: [] });
 });
@@ -40,7 +40,7 @@ builder.defineCatalogHandler(({ type, id }) => {
 // Metadata handler
 builder.defineMetaHandler(({ type, id }) => {
     console.log(`Meta request for type: ${type}, id: ${id}`);
-    const meta = data.all.find(item => item.id === id);
+    const meta = all.find(item => item.id === id);
     if (meta) {
         return Promise.resolve({ meta });
     } else {
@@ -51,7 +51,7 @@ builder.defineMetaHandler(({ type, id }) => {
 // Stream handler
 builder.defineStreamHandler(({ type, id }) => {
     console.log(`Stream request for type: ${type}, id: ${id}`);
-    const streamData = data.streams[id];
+    const streamData = streams[id];
     if (streamData) {
         return Promise.resolve({ streams: streamData });
     } else {
