@@ -65,7 +65,10 @@ app.get('/manifest.json', (req, res) => {
 });
 
 // Mount the addon interface
-app.use('/', builder.getInterface());
+const addonInterface = builder.getInterface();
+Object.keys(addonInterface).forEach(path => {
+    app.use(path, addonInterface[path]); // Use each route properly
+});
 
 // Start the server
 const port = process.env.PORT || 3000;
