@@ -1,4 +1,4 @@
-const movies = [
+data.movies = [
     {
         id: 'vercel_movie_1',
         type: 'movie',
@@ -15,7 +15,7 @@ const movies = [
     }
 ];
 
-const series = [
+data.series = [
     {
         id: 'vercel_series_1',
         type: 'series',
@@ -25,7 +25,7 @@ const series = [
     }
 ];
 
-const streams = {
+data.streams = {
     vercel_movie_1: [
         {
             title: 'Stream 1 for Movie 1',
@@ -49,9 +49,8 @@ const streams = {
     ]
 };
 
-module.exports = {
-    movies,
-    series,
-    streams,
-    all: [...movies, ...series]
-};
+data.all = [
+    ...data.movies,
+    ...data.series,
+    ...data.streams
+];
