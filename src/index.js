@@ -1,71 +1,74 @@
-const { addonBuilder } = require('stremio-addon-sdk'); // Import Stremio Addon SDK
-const express = require('express'); // Import Express framework
-const data = require('./data'); // Custom data for catalog, meta, and streams
+const { addonBuilder } = require('stremio-addon-sdk');
+const express = require('express');
+const data = require('./data');
 
-// Define the manifest inline within the code
 const manifest = {
     id: 'org.verceladdon',
     version: '1.0.0',
     name: 'Online Stremio Addon',
     description: 'A Stremio addon hosted online using Vercel.',
     resources: ['catalog', 'meta', 'stream'],
-    types: ['movie', 'series'], // Content types supported
-    idPrefixes: ['vercel_'], // Prefix for content IDs
+    types: ['movie', 'series'],
+    idPrefixes: ['vercel_'],
     catalogs: [
-        {
-            type: 'movie',
-            id: 'movies',
-            name: 'Vercel Movies Catalog'
-        },
-        {
-            type: 'series',
-            id: 'series',
-            name: 'Vercel Series Catalog'
-        }
+        { type: 'movie', id: 'movies', name: 'Vercel Movies Catalog' },
+        { type: 'series', id: 'series', name: 'Vercel Series Catalog' }
     ]
 };
 
-const builder = new addonBuilder(manifest); // Create addon builder with manifest
-const app = express(); // Initialize Express app
+const builder = new addonBuilder(manifest);
+const app = express();
 
-// Add CORS headers (important for Stremio to access the server)
+// Add CORS headers
 app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*'); // Allow requests from any origin
+    res.header('Access-Control-Allow-Origin', '*');
     next();
 });
 
-// Define catalog handler (responds with metadata for movies and series)
+// Catalog handler
 builder.defineCatalogHandler(({ type, id }) => {
-    // Return the appropriate catalog data based on type and id
+    console.log(`Catalog request for type: ${type}, id: ${id}`);
     if (type === 'movie' && id === 'movies') {
         return Promise.resolve({ metas: data.movies });
     }
     if (type === 'series' && id === 'series') {
         return Promise.resolve({ metas: data.series });
     }
-    return Promise.resolve({ metas: [] }); // Empty catalog for unsupported types
+    return Promise.resolve({ metas: [] });
 });
 
-// Define meta handler (responds with detailed metadata for a single item)
+// Metadata handler
 builder.defineMetaHandler(({ type, id }) => {
+    console.log(`Meta request for type: ${type}, id: ${id}`);
     const meta = data.all.find(item => item.id === id);
-    return meta ? Promise.resolve({ meta }) : Promise.reject('Meta not found');
+    if (meta) {
+        return Promise.resolve({ meta });
+    } else {
+        return Promise.resolve({ meta: null });
+    }
 });
 
-// Define stream handler (responds with stream information for a specific item)
+// Stream handler
 builder.defineStreamHandler(({ type, id }) => {
-    const streams = data.streams[id];
-    return streams ? Promise.resolve({ streams }) : Promise.reject('Streams not found');
+    console.log(`Stream request for type: ${type}, id: ${id}`);
+    const streamData = data.streams[id];
+    if (streamData) {
+        return Promise.resolve({ streams: streamData });
+    } else {
+        return Promise.resolve({ streams: [] });
+    }
 });
 
-// Serve the manifest at /manifest.json (needed by Stremio)
+// Serve the manifest
 app.get('/manifest.json', (req, res) => {
-    res.json(manifest); // Send the inline manifest as a response
+    res.json(manifest);
 });
 
-// Mount the Stremio Addon SDK interface
+// Mount the addon interface
 app.use('/', builder.getInterface());
 
-// Start the server (used by Vercel)
+// Start the server
 const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`Addon running at http://localhost:${port}`));
+app.listen(port, () => {
+    console.log(`Addon running at http://localhost:${port}`);
+});
