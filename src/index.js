@@ -66,8 +66,12 @@ app.get('/manifest.json', (req, res) => {
 
 // Mount the addon interface
 const addonInterface = builder.getInterface();
-Object.keys(addonInterface).forEach(path => {
-    app.use(path, addonInterface[path]); // Use each route properly
+Object.entries(addonInterface).forEach(([path, handler]) => {
+    if (typeof handler === 'function') {
+        app.use(path, handler);
+    } else {
+        console.error(`Handler for path "${path}" is not a function.`);
+    }
 });
 
 // Start the server
