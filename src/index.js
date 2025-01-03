@@ -9,8 +9,20 @@ const manifest = {
     name: 'Online Stremio Addon',
     description: 'A Stremio addon hosted online using Vercel.',
     resources: ['catalog', 'meta', 'stream'],
-    types: ['movie', 'series'],
-    idPrefixes: ['vercel_'],
+    types: ['movie', 'series'], // Content types supported
+    idPrefixes: ['vercel_'], // Prefix for content IDs
+    catalogs: [
+        {
+            type: 'movie',
+            id: 'movies',
+            name: 'Vercel Movies Catalog'
+        },
+        {
+            type: 'series',
+            id: 'series',
+            name: 'Vercel Series Catalog'
+        }
+    ]
 };
 
 const builder = new addonBuilder(manifest); // Create addon builder with manifest
@@ -24,8 +36,14 @@ app.use((req, res, next) => {
 
 // Define catalog handler (responds with metadata for movies and series)
 builder.defineCatalogHandler(({ type, id }) => {
-    const items = id === 'movies' ? data.movies : id === 'series' ? data.series : [];
-    return Promise.resolve({ metas: items });
+    // Return the appropriate catalog data based on type and id
+    if (type === 'movie' && id === 'movies') {
+        return Promise.resolve({ metas: data.movies });
+    }
+    if (type === 'series' && id === 'series') {
+        return Promise.resolve({ metas: data.series });
+    }
+    return Promise.resolve({ metas: [] }); // Empty catalog for unsupported types
 });
 
 // Define meta handler (responds with detailed metadata for a single item)
