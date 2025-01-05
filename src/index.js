@@ -1,71 +1,111 @@
-const express = require("express");
-const cors = require("cors");
+const express = require('express');
+const { addonBuilder } = require('stremio-addon-sdk');
+const axios = require('axios');
+
+const TMDB_API_KEY = '28797e7035babad606ddbc1642d2ec8b'; // Replace with your TMDb API key
+const TMDB_IMAGE_URL = 'https://image.tmdb.org/t/p/w500';
+
 const app = express();
 
-const path = require("path");
-const data = require(path.join(__dirname, "data.json"));
-
-// Middleware
-app.use(cors());
-
-// Manifest
+// Manifest setup
 const manifest = {
-  id: "org.verceladdon",
-  version: "1.0.0",
-  name: "Vercel Addon",
-  description: "A simple Stremio addon hosted on Vercel.",
-  resources: ["catalog", "meta", "stream"],
-  types: ["movie", "series"],
-  idPrefixes: ["vercel_"],
-  catalogs: [
-    { type: "movie", id: "movies", name: "Vercel Movies Catalog" },
-    { type: "series", id: "series", name: "Vercel Series Catalog" }
-  ]
+    id: 'org.verceladdon',
+    version: '1.0.0',
+    name: 'TMDb Stremio Addon',
+    description: 'A dynamic addon that fetches movies and series data from TMDb.',
+    resources: ['catalog', 'meta', 'stream'],
+    types: ['movie', 'series'],
+    idPrefixes: ['tmdb_'],
+    catalogs: [
+        { type: 'movie', id: 'movies', name: 'Movies Catalog' },
+        { type: 'series', id: 'series', name: 'Series Catalog' },
+    ],
 };
 
-// Serve Manifest
-app.get("/manifest.json", (req, res) => res.json(manifest));
+// Addon builder
+const builder = new addonBuilder(manifest);
 
-// Catalog Handler
-app.get("/catalog/:type/:id.json", (req, res) => {
-  const { type, id } = req.params;
-  const catalog = data[type]?.map((item) => ({
-    id: item.id,
-    type: item.type,
-    name: item.name,
-    poster: item.poster
-  }));
+// Fetch popular movies or series dynamically from TMDb
+builder.defineCatalogHandler(async ({ type, id }) => {
+    try {
+        const response = await axios.get(
+            `https://api.themoviedb.org/3/${type === 'movie' ? 'movie/popular' : 'tv/popular'}`,
+            { params: { api_key: TMDB_API_KEY, language: 'en-US' } }
+        );
 
-  if (!catalog) {
-    return res.status(404).send("Catalog not found");
-  }
+        const metas = response.data.results.map(item => ({
+            id: `tmdb_${item.id}`,
+            type,
+            name: item.title || item.name,
+            poster: `${TMDB_IMAGE_URL}${item.poster_path}`,
+            description: item.overview,
+            releaseInfo: item.release_date || item.first_air_date,
+        }));
 
-  res.json({ metas: catalog });
+        return { metas };
+    } catch (error) {
+        console.error('Error fetching catalog:', error);
+        return { metas: [] };
+    }
 });
 
-// Meta Handler
-app.get("/meta/:type/:id.json", (req, res) => {
-  const { type, id } = req.params;
-  const item = data.all.find((item) => item.id === id);
+// Fetch metadata for movies or series (includes seasons for series)
+builder.defineMetaHandler(async ({ type, id }) => {
+    const tmdbId = id.split('_')[1];
 
-  if (!item) {
-    return res.status(404).send("Meta not found");
-  }
+    try {
+        const response = await axios.get(
+            `https://api.themoviedb.org/3/${type === 'movie' ? 'movie' : 'tv'}/${tmdbId}`,
+            { params: { api_key: TMDB_API_KEY, language: 'en-US' } }
+        );
 
-  res.json({ meta: item });
+        const item = response.data;
+
+        const meta = {
+            id: `tmdb_${item.id}`,
+            type,
+            name: item.title || item.name,
+            poster: `${TMDB_IMAGE_URL}${item.poster_path}`,
+            description: item.overview,
+            releaseInfo: item.release_date || item.first_air_date,
+            genres: item.genres.map(g => g.name),
+        };
+
+        // Add seasons for series
+        if (type === 'series') {
+            meta.seasons = item.seasons.map(season => ({
+                id: `tmdb_${item.id}_season_${season.season_number}`,
+                name: season.name,
+                poster: `${TMDB_IMAGE_URL}${season.poster_path}`,
+                description: season.overview,
+                releaseInfo: season.air_date,
+            }));
+        }
+
+        return { meta };
+    } catch (error) {
+        console.error('Error fetching metadata:', error);
+        return { meta: null };
+    }
 });
 
-// Stream Handler
-app.get("/stream/:type/:id.json", (req, res) => {
-  const { type, id } = req.params;
-  const streams = data.streams[id];
+// Provide static streams for demonstration purposes
+builder.defineStreamHandler(({ id }) => {
+    const streams = {
+        tmdb_1: [{ title: "Example Stream", url: "https://example.com/stream.mp4", quality: "1080p" }],
+    };
 
-  if (!streams) {
-    return res.status(404).send("Streams not found");
-  }
+    const tmdbId = id.split('_')[1];
+    const stream = streams[`tmdb_${tmdbId}`];
 
-  res.json({ streams });
+    return { streams: stream || [] };
 });
 
-// Start Express
-module.exports = app;
+app.use('/', (req, res, next) => builder.getInterface()(req, res).catch(next));
+
+// Default route for serving the manifest
+app.get('/manifest.json', (req, res) => res.json(manifest));
+
+// Run the app
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Stremio Addon running on port ${PORT}`));
