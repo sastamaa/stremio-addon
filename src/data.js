@@ -30,7 +30,7 @@
       "poster": "https://example.com/series-poster1.jpg",
       "background": "https://example.com/series-background1.jpg",
       "genres": ["Mystery", "Thriller"],
-      "year": 2022
+      "year": 2023
     }
   ],
   "streams": {
@@ -82,7 +82,7 @@
       "poster": "https://example.com/series-poster1.jpg",
       "background": "https://example.com/series-background1.jpg",
       "genres": ["Mystery", "Thriller"],
-      "year": 2022
+      "year": 2023
     }
   ]
 }
