@@ -1,81 +1,71 @@
-const { addonBuilder } = require('stremio-addon-sdk');
-const express = require('express');
-const data = require('./data');
-
-const manifest = {
-    id: 'org.verceladdon',
-    version: '1.0.0',
-    name: 'Online Stremio Addon',
-    description: 'A Stremio addon hosted online using Vercel.',
-    resources: ['catalog', 'meta', 'stream'],
-    types: ['movie', 'series'],
-    idPrefixes: ['vercel_'],
-    catalogs: [
-        { type: 'movie', id: 'movies', name: 'Vercel Movies Catalog' },
-        { type: 'series', id: 'series', name: 'Vercel Series Catalog' }
-    ]
-};
-
-const builder = new addonBuilder(manifest);
+const express = require("express");
+const cors = require("cors");
+const { serveStatic } = require("vercel-static-middleware");
 const app = express();
 
-// Add CORS headers
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    next();
+const data = require("./data.json");
+
+// Middleware
+app.use(cors());
+
+// Manifest
+const manifest = {
+  id: "org.verceladdon",
+  version: "1.0.0",
+  name: "Vercel Addon",
+  description: "A simple Stremio addon hosted on Vercel.",
+  resources: ["catalog", "meta", "stream"],
+  types: ["movie", "series"],
+  idPrefixes: ["vercel_"],
+  catalogs: [
+    { type: "movie", id: "movies", name: "Vercel Movies Catalog" },
+    { type: "series", id: "series", name: "Vercel Series Catalog" }
+  ]
+};
+
+// Serve Manifest
+app.get("/manifest.json", (req, res) => res.json(manifest));
+
+// Catalog Handler
+app.get("/catalog/:type/:id.json", (req, res) => {
+  const { type, id } = req.params;
+  const catalog = data[type]?.map((item) => ({
+    id: item.id,
+    type: item.type,
+    name: item.name,
+    poster: item.poster
+  }));
+
+  if (!catalog) {
+    return res.status(404).send("Catalog not found");
+  }
+
+  res.json({ metas: catalog });
 });
 
-// Catalog handler
-builder.defineCatalogHandler(({ type, id }) => {
-    console.log(`Catalog request for type: ${type}, id: ${id}`);
-    if (type === 'movie' && id === 'movies') {
-        return Promise.resolve({ metas: movies });
-    }
-    if (type === 'series' && id === 'series') {
-        return Promise.resolve({ metas: series });
-    }
-    return Promise.resolve({ metas: [] });
+// Meta Handler
+app.get("/meta/:type/:id.json", (req, res) => {
+  const { type, id } = req.params;
+  const item = data.all.find((item) => item.id === id);
+
+  if (!item) {
+    return res.status(404).send("Meta not found");
+  }
+
+  res.json({ meta: item });
 });
 
-// Metadata handler
-builder.defineMetaHandler(({ type, id }) => {
-    console.log(`Meta request for type: ${type}, id: ${id}`);
-    const meta = all.find(item => item.id === id);
-    if (meta) {
-        return Promise.resolve({ meta });
-    } else {
-        return Promise.resolve({ meta: null });
-    }
+// Stream Handler
+app.get("/stream/:type/:id.json", (req, res) => {
+  const { type, id } = req.params;
+  const streams = data.streams[id];
+
+  if (!streams) {
+    return res.status(404).send("Streams not found");
+  }
+
+  res.json({ streams });
 });
 
-// Stream handler
-builder.defineStreamHandler(({ type, id }) => {
-    console.log(`Stream request for type: ${type}, id: ${id}`);
-    const streamData = streams[id];
-    if (streamData) {
-        return Promise.resolve({ streams: streamData });
-    } else {
-        return Promise.resolve({ streams: [] });
-    }
-});
-
-// Serve the manifest
-app.get('/manifest.json', (req, res) => {
-    res.json(manifest);
-});
-
-// Mount the addon interface
-const addonInterface = builder.getInterface();
-Object.entries(addonInterface).forEach(([path, handler]) => {
-    if (typeof handler === 'function') {
-        app.use(path, handler);
-    } else {
-        console.error(`Handler for path "${path}" is not a function.`);
-    }
-});
-
-// Start the server
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-    console.log(`Addon running at http://localhost:${port}`);
-});
+// Start Express
+module.exports = app;
