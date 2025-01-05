@@ -23,14 +23,29 @@
   ],
   "series": [
     {
-      "id": "vercel_series_1",
+      "id": "The_Day_of_the_Jackal",
       "type": "series",
       "name": "The Day of the Jackal",
       "description": "The Jackal is an elusive assassin who makes his living carrying out hits for the highest fee. He soon meets his match in a tenacious British intelligence officer who tracks him down in a thrilling cat-and-mouse chase across Europe.",
       "poster": "https://image.tmdb.org/t/p/w780/tYLecM3WSEjlkKhkGiH5G68Dprm.jpg",
       "background": "https://example.com/series-background1.jpg",
       "genres": ["Action", "Thriller"],
-      "year": 2023
+      "year": 2024,
+      "seasons": 1,
+      "episodes": [
+        {
+          "id": "The_Day_of_the_Jackal_1_1",
+          "season": 1,
+          "episode": 1,
+          "name": "Pilot Episode"
+        },
+        {
+          "id": "The_Day_of_the_Jackal_1_2",
+          "season": 1,
+          "episode": 2,
+          "name": "Episode Two"
+        }
+      ]
     }
   ],
   "streams": {
@@ -49,7 +64,11 @@
     "vercel_series_1": [
       {
         "url": "https://www.cdn.vidce.net/d/YB36qP66IkBIThxHvnDy3g/1736715933/video/The_Day_Of_The_Jackal/1x01.mp4",
-        "title": "S01E01"
+        "title": "S01E01 - 1080p HD"
+      },
+      {
+        "url": "https://www.cdn.vidce.net/d/YB36qP66IkBIThxHvnDy3g/1736715933/video/The_Day_Of_The_Jackal/1x02.mp4",
+        "title": "S01E02 - 1080p HD"
       }
     ]
   },
@@ -75,14 +94,15 @@
       "year": 2023
     },
     {
-      "id": "vercel_series_1",
+      "id": "The_Day_of_the_Jackal",
       "type": "series",
-      "name": "Mystery Solvers",
-      "description": "A thrilling mystery series.",
-      "poster": "https://example.com/series-poster1.jpg",
+      "name": "The Day of the Jackal",
+      "description": "The Jackal is an elusive assassin who makes his living carrying out hits for the highest fee. He soon meets his match in a tenacious British intelligence officer who tracks him down in a thrilling cat-and-mouse chase across Europe.",
+      "poster": "https://image.tmdb.org/t/p/w780/tYLecM3WSEjlkKhkGiH5G68Dprm.jpg",
       "background": "https://example.com/series-background1.jpg",
-      "genres": ["Mystery", "Thriller"],
-      "year": 2023
+      "genres": ["Action", "Thriller"],
+      "year": 2024,
+      "seasons": 1
     }
   ]
 }
