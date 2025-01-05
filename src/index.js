@@ -2,7 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 
-const data = require("./data.json");
+const path = require("path");
+const data = require(path.join(__dirname, "data.json"));
 
 // Middleware
 app.use(cors());
