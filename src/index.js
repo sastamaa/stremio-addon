@@ -101,11 +101,13 @@ builder.defineStreamHandler(({ id }) => {
     return { streams: stream || [] };
 });
 
-app.use('/', (req, res, next) => builder.getInterface()(req, res).catch(next));
+// Export the interface for Stremio to use
+const addonInterface = builder.getInterface();
 
-// Default route for serving the manifest
+// Use Express to handle the requests
 app.get('/manifest.json', (req, res) => res.json(manifest));
 
-// Run the app
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Stremio Addon running on port ${PORT}`));
+app.use('/addon', addonInterface);
+
+const PORT = process.env.PORT || 7000;
+app.listen(PORT, () => console.log(`Addon is running at http://localhost:${PORT}`));
