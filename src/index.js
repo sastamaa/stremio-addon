@@ -1,6 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-const { serveStatic } = require("vercel-static-middleware");
 const app = express();
 
 const data = require("./data.json");
