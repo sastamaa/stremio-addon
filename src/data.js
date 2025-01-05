@@ -1,57 +1,88 @@
-const movies = [
+{
+  "movies": [
     {
-        id: 'vercel_movie_1',
-        type: 'movie',
-        name: 'Example Movie 1',
-        poster: 'https://example.com/poster1.jpg',
-        description: 'An example movie for testing.'
+      "id": "vercel_movie_1",
+      "type": "movie",
+      "name": "Adventure Time",
+      "description": "A fun adventure movie.",
+      "poster": "https://example.com/poster1.jpg",
+      "background": "https://example.com/background1.jpg",
+      "genres": ["Adventure", "Comedy"],
+      "year": 2024
     },
     {
-        id: 'vercel_movie_2',
-        type: 'movie',
-        name: 'Example Movie 2',
-        poster: 'https://example.com/poster2.jpg',
-        description: 'Another example movie.'
+      "id": "vercel_movie_2",
+      "type": "movie",
+      "name": "Drama Tale",
+      "description": "An emotional story of love and loss.",
+      "poster": "https://example.com/poster2.jpg",
+      "background": "https://example.com/background2.jpg",
+      "genres": ["Drama", "Romance"],
+      "year": 2023
     }
-];
-
-const series = [
+  ],
+  "series": [
     {
-        id: 'vercel_series_1',
-        type: 'series',
-        name: 'Example Series 1',
-        poster: 'https://example.com/poster3.jpg',
-        description: 'An example series for testing.'
+      "id": "vercel_series_1",
+      "type": "series",
+      "name": "Mystery Solvers",
+      "description": "A thrilling mystery series.",
+      "poster": "https://example.com/series-poster1.jpg",
+      "background": "https://example.com/series-background1.jpg",
+      "genres": ["Mystery", "Thriller"],
+      "year": 2022
     }
-];
-
-const streams = {
-    vercel_movie_1: [
-        {
-            title: 'Stream 1 for Movie 1',
-            url: 'https://example.com/streams/movie1_stream1.mp4',
-            mime: 'video/mp4'
-        }
+  ],
+  "streams": {
+    "vercel_movie_1": [
+      {
+        "url": "https://example.com/stream/movie1.mp4",
+        "title": "1080p HD"
+      }
     ],
-    vercel_movie_2: [
-        {
-            title: 'Stream 1 for Movie 2',
-            url: 'https://example.com/streams/movie2_stream1.mp4',
-            mime: 'video/mp4'
-        }
+    "vercel_movie_2": [
+      {
+        "url": "https://example.com/stream/movie2.mp4",
+        "title": "720p HD"
+      }
     ],
-    vercel_series_1: [
-        {
-            title: 'Stream 1 for Series 1',
-            url: 'https://example.com/streams/series1_stream1.mp4',
-            mime: 'video/mp4'
-        }
+    "vercel_series_1": [
+      {
+        "url": "https://example.com/stream/series1/episode1.mp4",
+        "title": "S01E01 - 1080p HD"
+      }
     ]
-};
-
-module.exports = {
-    movies,
-    series,
-    streams,
-    all: [...movies, ...series]
-};
+  },
+  "all": [
+    {
+      "id": "vercel_movie_1",
+      "type": "movie",
+      "name": "Adventure Time",
+      "description": "A fun adventure movie.",
+      "poster": "https://example.com/poster1.jpg",
+      "background": "https://example.com/background1.jpg",
+      "genres": ["Adventure", "Comedy"],
+      "year": 2024
+    },
+    {
+      "id": "vercel_movie_2",
+      "type": "movie",
+      "name": "Drama Tale",
+      "description": "An emotional story of love and loss.",
+      "poster": "https://example.com/poster2.jpg",
+      "background": "https://example.com/background2.jpg",
+      "genres": ["Drama", "Romance"],
+      "year": 2023
+    },
+    {
+      "id": "vercel_series_1",
+      "type": "series",
+      "name": "Mystery Solvers",
+      "description": "A thrilling mystery series.",
+      "poster": "https://example.com/series-poster1.jpg",
+      "background": "https://example.com/series-background1.jpg",
+      "genres": ["Mystery", "Thriller"],
+      "year": 2022
+    }
+  ]
+}
