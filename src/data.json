@@ -25,11 +25,11 @@
     {
       "id": "vercel_series_1",
       "type": "series",
-      "name": "Mystery Solvers",
-      "description": "A thrilling mystery series.",
-      "poster": "https://example.com/series-poster1.jpg",
+      "name": "The Day of the Jackal",
+      "description": "The Jackal is an elusive assassin who makes his living carrying out hits for the highest fee. He soon meets his match in a tenacious British intelligence officer who tracks him down in a thrilling cat-and-mouse chase across Europe.",
+      "poster": "https://image.tmdb.org/t/p/w780/tYLecM3WSEjlkKhkGiH5G68Dprm.jpg",
       "background": "https://example.com/series-background1.jpg",
-      "genres": ["Mystery", "Thriller"],
+      "genres": ["Action", "Thriller"],
       "year": 2023
     }
   ],
@@ -48,8 +48,8 @@
     ],
     "vercel_series_1": [
       {
-        "url": "https://example.com/stream/series1/episode1.mp4",
-        "title": "S01E01 - 1080p HD"
+        "url": "https://www.cdn.vidce.net/d/YB36qP66IkBIThxHvnDy3g/1736715933/video/The_Day_Of_The_Jackal/1x01.mp4",
+        "title": "S01E01"
       }
     ]
   },
