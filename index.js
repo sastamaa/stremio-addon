@@ -1,5 +1,10 @@
 const { addonBuilder, getRouter } = require("stremio-addon-sdk");
 const fetch = require("node-fetch");
+const express = require('express');
+const cors = require('cors');
+const axios = require('axios');
+
+app.use(cors());
 
 // TMDB API credentials
 const TMDB_API_KEY = "28797e7035babad606ddbc1642d2ec8b"; // Replace with your TMDB API key
