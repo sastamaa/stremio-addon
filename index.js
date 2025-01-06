@@ -7,7 +7,7 @@ const axios = require('axios');
 app.use(cors());
 
 // TMDB API credentials
-const TMDB_API_KEY = "28797e7035babad606ddbc1642d2ec8b"; // Replace with your TMDB API key
+const TMDB_API_KEY = "28797e7035babad606ddbc1642d2ec8b"; // Replace with your API key
 const TMDB_BASE_URL = "https://api.themoviedb.org/3";
 
 const builder = new addonBuilder({
