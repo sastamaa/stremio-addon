@@ -2,7 +2,7 @@ const { addonBuilder, getRouter } = require("stremio-addon-sdk");
 const fetch = require("node-fetch");
 
 // TMDB API credentials
-const TMDB_API_KEY = "your_tmdb_api_key"; // Replace with your TMDB API key
+const TMDB_API_KEY = "28797e7035babad606ddbc1642d2ec8b"; // Replace with your TMDB API key
 const TMDB_BASE_URL = "https://api.themoviedb.org/3";
 
 const builder = new addonBuilder({
