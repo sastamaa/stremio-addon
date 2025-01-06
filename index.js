@@ -1,13 +1,8 @@
 const { addonBuilder, getRouter } = require("stremio-addon-sdk");
 const fetch = require("node-fetch");
-const express = require('express');
-const cors = require('cors');
-const axios = require('axios');
-
-app.use(cors());
 
 // TMDB API credentials
-const TMDB_API_KEY = "28797e7035babad606ddbc1642d2ec8b"; // Replace with your API key
+const TMDB_API_KEY = "your_tmdb_api_key"; // Replace with your TMDB API key
 const TMDB_BASE_URL = "https://api.themoviedb.org/3";
 
 const builder = new addonBuilder({
@@ -24,27 +19,25 @@ const builder = new addonBuilder({
   ],
 });
 
-// Example data: Only TMDB IDs and associated streaming links
+// Example content with TMDB IDs and streaming links
 const exampleContent = {
   movie: [
-    { tmdbId: "603692", streamLinks: ["https://example-stream.com/603692"] }, // John Wick: Chapter 4
-    { tmdbId: "871693", streamLinks: ["https://example-stream.com/871693"] }, // Everything Everywhere All at Once
+    { tmdbId: "603692", streamLinks: ["https://example-stream.com/603692"] },
+    { tmdbId: "871693", streamLinks: ["https://example-stream.com/871693"] },
   ],
   series: [
-    { tmdbId: "1399", streamLinks: ["https://example-stream.com/1399/ep1"] }, // Game of Thrones
-    { tmdbId: "66732", streamLinks: ["https://example-stream.com/66732/ep1"] }, // Stranger Things
+    { tmdbId: "1399", streamLinks: ["https://example-stream.com/1399/ep1"] },
+    { tmdbId: "66732", streamLinks: ["https://example-stream.com/66732/ep1"] },
   ],
   cartoon: [
-    { tmdbId: "166428", streamLinks: ["https://example-stream.com/166428/ep1"] }, // BoJack Horseman
-    { tmdbId: "121280", streamLinks: ["https://example-stream.com/121280/ep1"] }, // Adventure Time
+    { tmdbId: "166428", streamLinks: ["https://example-stream.com/166428/ep1"] },
+    { tmdbId: "121280", streamLinks: ["https://example-stream.com/121280/ep1"] },
   ],
 };
 
-// Fetch metadata from TMDB for the catalog
+// Catalog handler
 builder.defineCatalogHandler(async ({ type, id }) => {
-  const items = exampleContent[type];
-  if (!items) return Promise.resolve({ metas: [] });
-
+  const items = exampleContent[type] || [];
   const metas = await Promise.all(
     items.map(async ({ tmdbId }) => {
       const tmdbMeta = await fetchTmdbMeta(type, tmdbId);
@@ -55,7 +48,7 @@ builder.defineCatalogHandler(async ({ type, id }) => {
   return Promise.resolve({ metas });
 });
 
-// Fetch detailed metadata for a specific item
+// Meta handler
 builder.defineMetaHandler(async ({ type, id }) => {
   const item = findItemById(type, id);
   if (!item) return Promise.reject("Meta not found");
@@ -64,7 +57,7 @@ builder.defineMetaHandler(async ({ type, id }) => {
   return { meta: formatMeta(tmdbMeta, type, true) };
 });
 
-// Provide streams for the specific item
+// Stream handler
 builder.defineStreamHandler(({ type, id }) => {
   const item = findItemById(type, id);
   if (!item) return Promise.resolve({ streams: [] });
@@ -77,9 +70,7 @@ builder.defineStreamHandler(({ type, id }) => {
   return Promise.resolve({ streams });
 });
 
-// Helper Functions
-
-// Fetch metadata from TMDB API
+// Fetch metadata from TMDB
 async function fetchTmdbMeta(type, tmdbId) {
   const endpoint = `${TMDB_BASE_URL}/${type === "movie" ? "movie" : "tv"}/${tmdbId}?api_key=${TMDB_API_KEY}`;
   const response = await fetch(endpoint);
@@ -100,12 +91,13 @@ function formatMeta(data, type, isDetailed = false) {
   };
 }
 
-// Find content item by ID
+// Find content by ID
 function findItemById(type, id) {
   return exampleContent[type]?.find((item) => item.tmdbId.toString() === id);
 }
 
-// Export the addon
+// Export router for Vercel
 const addonInterface = builder.getInterface();
 const router = getRouter(addonInterface);
+
 module.exports = router;
