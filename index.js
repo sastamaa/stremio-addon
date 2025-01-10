@@ -106,7 +106,7 @@ app.get('/stream/movie/tmdb-movie-:id.json', (req, res) => {
         // Streaming link for "Venom"
         streams.push({
             title: 'Venom',
-            url: 'venom.mp4', // Replace with actual streaming link for Venom
+            url: 'https://www.sw.vidce.net/d/UZyt7ohW8G4SH9rAT36QXg/1737113698/video/2015/tt1262426.mp4', // Replace with actual streaming link for Venom
             behaviorHints: {
                 notWebReady: true,
             }
