@@ -12,7 +12,7 @@ app.get('/manifest.json', (req, res) => {
     res.json({
         id: 'com.example.stremio.tmdb',
         version: '1.0.0',
-        name: 'TMDB Stremio Addon',
+        name: 'DeepSeek Stremio Addon',
         description: 'Stremio addon for movies and series from TMDB',
         resources: ['catalog', 'meta', 'stream'],
         types: ['movie', 'series'],
