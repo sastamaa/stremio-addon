@@ -39,7 +39,7 @@ app.get('/catalog/movie/tmdb-movies.json', async (req, res) => {
         console.log('Fetching catalog for movies...'); // Debugging log
 
         // Fetch details for specific movies (e.g., "Venom" and "Wicked")
-        const movieIds = ['335983', '653346']; // TMDB IDs for "Venom" and "Wicked"
+        const movieIds = ['335983', '402431']; // TMDB IDs for "Venom" and "Wicked"
         const movies = await Promise.all(
             movieIds.map(async (id) => {
                 console.log(`Fetching movie details for TMDB ID: ${id}`); // Debugging log
@@ -108,16 +108,16 @@ app.get('/stream/movie/tmdb-movie-:id.json', (req, res) => {
             title: 'Venom',
             url: 'https://www.sw.vidce.net/d/UZyt7ohW8G4SH9rAT36QXg/1737113698/video/2015/tt1262426.mp4', // Replace with actual streaming link for Venom
             behaviorHints: {
-                notWebReady: true,
+                notWebReady: false,
             }
         });
-    } else if (id === 'tmdb-movie-653346') {
+    } else if (id === 'tmdb-movie-402431') {
         // Streaming link for "Wicked"
         streams.push({
             title: 'Wicked',
-            url: 'wicked.mp4', // Replace with actual streaming link for Wicked
+            url: 'https://ashdi.vip/video17/2/new/killer.heat.2024.1080p.amzn.webdl.aac2.0.h.264utopia_145019/hls/480/DaqXjXWRkeBYhA37BA==/index.m3u8', // Replace with actual streaming link for Wicked
             behaviorHints: {
-                notWebReady: true,
+                notWebReady: false,
             }
         });
     }
@@ -232,19 +232,19 @@ app.get('/stream/series/tmdb-series-:id.json', (req, res) => {
     if (seriesId === 'tmdb-series-966') {
         // Streaming link for "The Day of the Jackal"
         streams.push({
-            title: `The Day of the Jackal - S${season}E${episode}`,
-            url: 'jackal.mp4', // Replace with actual streaming link for "The Day of the Jackal"
+            title: `The Day of the Jackal - S1E1`,
+            url: 'https://ashdi.vip/video11/2/new/blink.twice.2024.ua_142368/hls/1080/AqaXi3WGjuRekxH2AQ==/index.m3u8', // Replace with actual streaming link for "The Day of the Jackal"
             behaviorHints: {
-                notWebReady: true,
+                notWebReady: false,
             }
         });
     } else if (seriesId === 'tmdb-series-60625') {
         // Streaming link for "Rick and Morty"
         streams.push({
-            title: `Rick and Morty - S${season}E${episode}`,
-            url: 'morty.mp4', // Replace with actual streaming link for "Rick and Morty"
+            title: `Rick and Morty - S1E1`,
+            url: 'https://ashdi.vip/video11/2/new/blink.twice.2024.ua_142368/hls/1080/AqaXi3WGjuRekxH2AQ==/index.m3u8', // Replace with actual streaming link for "Rick and Morty"
             behaviorHints: {
-                notWebReady: true,
+                notWebReady: false,
             }
         });
     }
